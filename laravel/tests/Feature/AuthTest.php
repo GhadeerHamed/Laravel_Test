@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -44,5 +43,29 @@ class AuthTest extends TestCase
         $response->assertRedirect('/home');
 
         $this->assertAuthenticatedAs($user);
+    }
+
+    /**
+     * A basic feature test example.
+     * @test
+     * @return void
+     */
+    public function user_cant_login_with_incorrect_credentials(): void
+    {
+        $user = User::query()->create([
+            'name' => 'name',
+            'email' => 'email@email.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $credentials = ['email' => 'email@email.com', 'password' => 'incorrect-password'];
+
+        $response = $this->from('/login')->post('/login', $credentials); //Request from login page To expect to redirect back to it.
+
+        $response->assertSessionHasErrors(['email']);
+
+        $response->assertRedirect('/login');
+
+        $this->assertGuest();
     }
 }
