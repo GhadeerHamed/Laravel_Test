@@ -11,7 +11,7 @@ class AuthTest extends TestCase
     use RefreshDatabase;
     /**
      * A basic feature test example.
-     *
+     * @test
      * @return void
      */
     public function user_can_access_login_endpoint_web(): void
