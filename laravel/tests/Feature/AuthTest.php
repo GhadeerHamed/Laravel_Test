@@ -36,9 +36,13 @@ class AuthTest extends TestCase
             'email' => 'email@email.com',
             'password' => Hash::make('password'),
         ]);
-        $credentials = ['email' => 'email@email.com', 'password' => 'password'];
-        Auth::attempt($credentials);
 
-        $this->assertAuthenticated();
+        $credentials = ['email' => 'email@email.com', 'password' => 'password'];
+
+        $response = $this->post('/login', $credentials);
+
+        $response->assertRedirect('/home');
+
+        $this->assertAuthenticatedAs($user);
     }
 }
